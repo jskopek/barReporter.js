@@ -42,6 +42,7 @@
             $(data).each( function(index, value) {
                 var el = $.fn.barReporter.get_or_create_bar( row_el, index );
                 var width = value / scale * 100;
+                if( width > 100 ) { width = 100; }
                 $(el).css("width", width + "%");
             });
 

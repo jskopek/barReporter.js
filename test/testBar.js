@@ -12,6 +12,21 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "100%" );
         ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).text() == "Label 1" }).length );
     });
+    test("custom scale", function() {
+        var el = $("<div class='bar'></div>");
+        var data = [[20, "Label 1"], [40, "Label 2"]];
+
+        //ensure custom scale is respected
+        $(el).barReporter({"data": data, "scale": 80});
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "25%" );
+        equal( $(el).find("#brRow1 #brBar0")[0].style.width, "50%" );
+
+        //ensure percent cannot go over 100%;
+        $(el).barReporter({"data": data, "scale": 10});
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "100%" );
+        equal( $(el).find("#brRow1 #brBar0")[0].style.width, "100%" );
+
+    });
     test("render multiple bars", function() {
         var el = $("<div class='bar'></div>");
         var data = [[20, "Label 1"], [40, "Label 2"]];
