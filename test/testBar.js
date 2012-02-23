@@ -158,7 +158,5 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar1").text(), "40" );
 
     });
-    test("show percent", function() {
-    });
 });
 
