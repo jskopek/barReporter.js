@@ -24,7 +24,7 @@
         var get_or_create_bar = function(parent, index) {
             var el = $(el).find(".brBars #brBar" + index);
             if( !el.length ) {
-                el = $("<div class='brBar" + index + "'></div>");
+                el = $("<div id='brBar" + index + "'></div>");
                 $(parent).find(".brBars").append( el );
             }
             return el;
@@ -38,7 +38,7 @@
             //Update bar data
             $(data).each( function(index, value) {
                 var el = get_or_create_bar( parent, index );
-                var width = percent_val( value );
+                var width = value / scale_val() * 100;
                 $(el).css("width", width + "%");
             });
 
@@ -46,8 +46,39 @@
             $(parent).find(".brLabel").text( label );
         }
 
-        var percent_val = function( val ) {
-            return val;
+        //calculates the scale to present items out of
+        var scale_val = function() {
+            if( options.scale ) {
+                return options.scale
+            }
+
+            var scale = 0;
+
+            for( var index in options.data ) {
+                var data = options.data[index][0];
+                var total = 0;
+
+                //if row does not have array of data, row's total is simply the value
+                if( !$.isArray(data) ) {
+                    total = data;
+
+                //if row has array of data, row is either sum of values or highest value (depends on report type)
+                } else {
+                    $(data).each(function(i,value) {
+                        if( options.type == "stacked" ) {
+                            total += value;
+                        } else if( (options.type == "multi") && (value > total) ) {
+                            total = value;
+                        }
+                    });
+                }
+
+                if( total > scale ) {
+                    scale = total;
+                }
+            }
+
+            return scale;
         }
 
         $(options.data).each($.proxy(function(index, row_data) {
