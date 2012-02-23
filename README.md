@@ -31,10 +31,10 @@ If you have multiple points of data for a label, simply pass an array of values 
 
 In addition to `data`, several options may be specified:
 
-*`color`: A hex color value for the chart
-*`type`: When dealing with multi-value labels, specify `stacked` or `multi`
-*`scale`: A value to scale bars by; if not specified, will default to highest value passed
-*`show_percent`: Choose to show a label indicating the size of each bar, in percent
+* `color`: A hex color value for the chart
+* `type`: When dealing with multi-value labels, specify `stacked` or `multi`
+* `scale`: A value to scale bars by; if not specified, will default to highest value passed
+* `show_percent`: Choose to show a label indicating the size of each bar, in percent
 
 ##Caveats:
 
