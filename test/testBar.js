@@ -40,9 +40,16 @@ $(document).ready(function() {
         equal( $(el).find("#brRow1 #brBar0")[0].style.width, "50%" );
         equal( $(el).find("#brRow2 #brBar0")[0].style.width, "100%" );
     });
-    test("update with new rows", function() {
-    });
     test("update removing rows", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [[20, "Label 1 modified"], [40, "Label 2"], [80, "Label 3"]]});
+        equal( $(el).find(".brRow").length, 3 );
+
+        $(el).barReporter({"data": [[20, "Label 1 modified"], [40, "Label 2"]]});
+        equal( $(el).find(".brRow").length, 2 );
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "50%" );
+        equal( $(el).find("#brRow1 #brBar0")[0].style.width, "100%" );
     });
     test("update with new row points", function() {
     });

@@ -24,30 +24,14 @@
         var get_or_create_bar = function(parent, index) {
             var el = $(parent).find(".brBars #brBar" + index);
             if( !el.length ) {
-                el = $("<div id='brBar" + index + "'></div>");
+                el = $("<div class='brBar' id='brBar" + index + "'></div>");
                 $(parent).find(".brBars").append( el );
             }
             return el;
         }
 
-        //render individual row
-        var render_row = function(parent, row_data) {
-            var data = $.isArray( row_data[0] ) ? row_data[0] : [ row_data[0] ];
-            var label = row_data[1];
-
-            //Update bar data
-            $(data).each( function(index, value) {
-                var el = get_or_create_bar( parent, index );
-                var width = value / scale_val() * 100;
-                $(el).css("width", width + "%");
-            });
-
-            //Update label
-            $(parent).find(".brLabel").text( label );
-        }
-
         //calculates the scale to present items out of
-        var scale_val = function() {
+        var get_scale = function() {
             if( options.scale ) {
                 return options.scale
             }
@@ -81,9 +65,43 @@
             return scale;
         }
 
+        //Remove any rows that no longer exist
+        if( $(this).find(".brRow").length >= options.data.length ) {
+            $(this).find(".brRow").each(function(index) {
+                if( index > options.data.length - 1 ) {
+                    $(this).remove();
+                }
+            });
+        }
+
+        //loop through rows and render them
         $(options.data).each($.proxy(function(index, row_data) {
+
+            //get or create row
             var row_el = get_or_create_row(this, index);
-            render_row(row_el, row_data);
+
+            var data = $.isArray( row_data[0] ) ? row_data[0] : [ row_data[0] ];
+            var label = row_data[1];
+
+            //Remove any bars that no longer exist
+            if( row_el.find(".brBar").length >= data.length ) {
+                row_el.find(".brBar").each(function(index) {
+                    if( index > data.length - 1 ) {
+                        $(this).remove();
+                    }
+                });
+            }
+
+            //Update bar data
+            $(data).each( function(index, value) {
+                var el = get_or_create_bar( row_el, index );
+                var width = value / get_scale() * 100;
+                $(el).css("width", width + "%");
+            });
+
+            //Update label
+            $(row_el).find(".brLabel").text( label );
+
         }, this));
     }
 
