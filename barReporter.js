@@ -10,7 +10,7 @@
 
         //find the bar element or initialize & add to container
         var get_or_create_row = function(parent, id) {
-            var el = $(parent).find("#br_" + id);
+            var el = $(parent).find("#brRow" + id);
             if( !el.length ) {
                 el = $("<div class='brRow' id='brRow" + id + "'>" +
                     "<div class='brLabel'></div>" +
@@ -22,7 +22,7 @@
         
         //find or add a new bar
         var get_or_create_bar = function(parent, index) {
-            var el = $(el).find(".brBars #brBar" + index);
+            var el = $(parent).find(".brBars #brBar" + index);
             if( !el.length ) {
                 el = $("<div id='brBar" + index + "'></div>");
                 $(parent).find(".brBars").append( el );
