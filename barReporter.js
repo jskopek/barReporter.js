@@ -8,62 +8,8 @@
             "scale": undefined,
         }, options);
 
-        //find the bar element or initialize & add to container
-        var get_or_create_row = function(parent, id) {
-            var el = $(parent).find("#brRow" + id);
-            if( !el.length ) {
-                el = $("<div class='brRow' id='brRow" + id + "'>" +
-                    "<div class='brLabel'></div>" +
-                    "<div class='brBars'></div>");
-                $(parent).append( el );
-            }
-            return el;
-        }
-        
-        //find or add a new bar
-        var get_or_create_bar = function(parent, index) {
-            var el = $(parent).find(".brBars #brBar" + index);
-            if( !el.length ) {
-                el = $("<div class='brBar' id='brBar" + index + "'></div>");
-                $(parent).find(".brBars").append( el );
-            }
-            return el;
-        }
-
-        //calculates the scale to present items out of
-        var get_scale = function() {
-            if( options.scale ) {
-                return options.scale
-            }
-
-            var scale = 0;
-
-            for( var index in options.data ) {
-                var data = options.data[index][0];
-                var total = 0;
-
-                //if row does not have array of data, row's total is simply the value
-                if( !$.isArray(data) ) {
-                    total = data;
-
-                //if row has array of data, row is either sum of values or highest value (depends on report type)
-                } else {
-                    $(data).each(function(i,value) {
-                        if( options.type == "stacked" ) {
-                            total += value;
-                        } else if( (options.type == "multi") && (value > total) ) {
-                            total = value;
-                        }
-                    });
-                }
-
-                if( total > scale ) {
-                    scale = total;
-                }
-            }
-
-            return scale;
-        }
+        //determine graph scale
+        var scale = $.fn.barReporter.calculate_scale(options);
 
         //Remove any rows that no longer exist
         if( $(this).find(".brRow").length >= options.data.length ) {
@@ -78,7 +24,7 @@
         $(options.data).each($.proxy(function(index, row_data) {
 
             //get or create row
-            var row_el = get_or_create_row(this, index);
+            var row_el = $.fn.barReporter.get_or_create_row(this, index);
 
             var data = $.isArray( row_data[0] ) ? row_data[0] : [ row_data[0] ];
             var label = row_data[1];
@@ -94,8 +40,8 @@
 
             //Update bar data
             $(data).each( function(index, value) {
-                var el = get_or_create_bar( row_el, index );
-                var width = value / get_scale() * 100;
+                var el = $.fn.barReporter.get_or_create_bar( row_el, index );
+                var width = value / scale * 100;
                 $(el).css("width", width + "%");
             });
 
@@ -103,6 +49,63 @@
             $(row_el).find(".brLabel").text( label );
 
         }, this));
+    };
+
+    //find the bar element or initialize & add to container
+    $.fn.barReporter.get_or_create_row = function(parent, id) {
+        var el = $(parent).find("#brRow" + id);
+        if( !el.length ) {
+            el = $("<div class='brRow' id='brRow" + id + "'>" +
+                "<div class='brLabel'></div>" +
+                "<div class='brBars'></div>");
+            $(parent).append( el );
+        }
+        return el;
+    }
+
+    //find or add a new bar
+    $.fn.barReporter.get_or_create_bar = function(parent, index) {
+        var el = $(parent).find(".brBars #brBar" + index);
+        if( !el.length ) {
+            el = $("<div class='brBar' id='brBar" + index + "'></div>");
+            $(parent).find(".brBars").append( el );
+        }
+        return el;
+    }
+
+    //calculates the scale to present items out of
+    $.fn.barReporter.calculate_scale = function(options) {
+        if( options.scale ) {
+            return options.scale
+        }
+
+        var scale = 0;
+
+        for( var index in options.data ) {
+            var data = options.data[index][0];
+            var total = 0;
+
+            //if row does not have array of data, row's total is simply the value
+            if( !$.isArray(data) ) {
+                total = data;
+
+            //if row has array of data, row is either sum of values or highest value (depends on report type)
+            } else {
+                $(data).each(function(i,value) {
+                    if( options.type == "stacked" ) {
+                        total += value;
+                    } else if( (options.type == "multi") && (value > total) ) {
+                        total = value;
+                    }
+                });
+            }
+
+            if( total > scale ) {
+                scale = total;
+            }
+        }
+
+        return scale;
     }
 
 })(jQuery);
