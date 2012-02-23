@@ -66,8 +66,6 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "50%" );
         equal( $(el).find("#brRow1 #brBar0")[0].style.width, "100%" );
     });
-    test("show percent", function() {
-    });
 
     module("Multiple points")
     test("render multiple points, stacked", function() {
@@ -115,6 +113,14 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar2")[0].style.width, "100%" );
     });
     test("update removing row points", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [ [[20,40, 80], "Label 1 modified"] ]});
+        $(el).barReporter({"data": [ [[40, 80], "Label 1 modified"] ]});
+        equal( $(el).find("#brRow0 .brBar").length, 2 );
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "50%" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "100%" );
+
     });
 
     module("Bar Label");
@@ -151,6 +157,8 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar0").text(), "10" );
         equal( $(el).find("#brRow0 #brBar1").text(), "40" );
 
+    });
+    test("show percent", function() {
     });
 });
 
