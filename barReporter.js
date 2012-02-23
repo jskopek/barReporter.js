@@ -4,9 +4,16 @@
         options = $.extend({
             "data": [],
             "color": "green",
-            "type": "stacked",
+            "type": "multi",
             "scale": undefined,
         }, options);
+
+        //add appropriate type css to barReport
+        if( options["type"] == "multi" ) {
+            $(this).removeClass("brStacked").addClass("brMulti");
+        } else if( options["type"] == "stacked" ) {
+            $(this).removeClass("brMulti").addClass("brStacked");
+        }
 
         //determine graph scale
         var scale = $.fn.barReporter.calculate_scale(options);

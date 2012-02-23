@@ -66,11 +66,54 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "50%" );
         equal( $(el).find("#brRow1 #brBar0")[0].style.width, "100%" );
     });
+    test("show percent", function() {
+    });
+
+    module("Multiple points")
+    test("render multiple points, stacked", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [ [[10,40], "Label 1 modified"] ]});
+        ok( $(el).hasClass("brMulti"), "does not have multi css class" );
+        equal( $(el).find("#brRow0 .brBar").length, 2 );
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "25%" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "100%" );
+
+    });
+    test("render multiple points, multi", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [ [[10,40], "Label 1 modified"] ], "type": "stacked"});
+        ok( $(el).hasClass("brStacked"), "does not have stacked css class" );
+        equal( $(el).find("#brRow0 .brBar").length, 2 );
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "20%" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "80%" );
+    });
+    test("convert from stacked to multi", function() {
+        var el = $("<div class='bar'></div>");
+        var data = [ [[10,40], "Label 1 modified"] ];
+
+        $(el).barReporter({"data": data, "type": "stacked"});
+        ok( $(el).hasClass("brStacked"), "does not have stacked css class" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "80%" );
+
+        $(el).barReporter({"data": data, "type": "multi"});
+        ok( $(el).hasClass("brMulti"), "does not have multi css class" );
+        ok( !$(el).hasClass("brStacked"), "has leftover not have stacked css class" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "100%" );
+    });
     test("update with new row points", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [ [[20,40], "Label 1 modified"] ]});
+
+        $(el).barReporter({"data": [ [[20,40, 80], "Label 1 modified"] ]});
+        equal( $(el).find("#brRow0 .brBar").length, 3 );
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "25%" );
+        equal( $(el).find("#brRow0 #brBar1")[0].style.width, "50%" );
+        equal( $(el).find("#brRow0 #brBar2")[0].style.width, "100%" );
     });
     test("update removing row points", function() {
-    });
-    test("show percent", function() {
     });
 });
 
