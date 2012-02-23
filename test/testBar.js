@@ -50,8 +50,8 @@ $(document).ready(function() {
         ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).text() == "Label 1 modified" }).length );
 
         //add a third row
-        $(el).barReporter({"data": [[10, "Label 1 modified"], [40, "Label 2"], [80, "Label 3"]]});
-        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "12.5%" );
+        $(el).barReporter({"data": [[5, "Label 1 modified"], [40, "Label 2"], [80, "Label 3"]]});
+        equal( $(el).find("#brRow0 #brBar0")[0].style.width, "6.25%" );
         equal( $(el).find("#brRow1 #brBar0")[0].style.width, "50%" );
         equal( $(el).find("#brRow2 #brBar0")[0].style.width, "100%" );
     });
@@ -78,6 +78,7 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 .brBar").length, 2 );
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "25%" );
         equal( $(el).find("#brRow0 #brBar1")[0].style.width, "100%" );
+
 
     });
     test("render multiple points, multi", function() {
@@ -114,6 +115,42 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 #brBar2")[0].style.width, "100%" );
     });
     test("update removing row points", function() {
+    });
+
+    module("Bar Label");
+    test("render simple bar", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({ "data": [[30, "Label 1"]]});
+        equal( $(el).find("#brRow0 #brBar0").text(), "30" );
+    });
+    test("render multiple bars", function() {
+        var el = $("<div class='bar'></div>");
+        $(el).barReporter({"data": [[20, "Label 1"], [40, "Label 2"]]});
+
+        equal( $(el).find("#brRow0 #brBar0").text(), "20" );
+        equal( $(el).find("#brRow1 #brBar0").text(), "40" );
+    });
+    test("simple update", function() {
+        var el = $("<div class='bar'></div>");
+        $(el).barReporter({"data": [[20, "Label 1"], [40, "Label 2"]]});
+        equal( $(el).find("#brRow0 #brBar0").text(), "20" );
+
+        //modify a few components of first bar
+        $(el).barReporter({"data": [[10, "Label 1 modified"], [40, "Label 2"]]});
+        equal( $(el).find("#brRow0 #brBar0").text(), "10" );
+
+        //add a third row
+        $(el).barReporter({"data": [[5, "Label 1 modified"], [40, "Label 2"], [80, "Label 3"]]});
+        equal( $(el).find("#brRow0 #brBar0").text(), "5" );
+    });
+    test("render multiple points, stacked", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({"data": [ [[10,40], "Label 1 modified"] ]});
+        equal( $(el).find("#brRow0 #brBar0").text(), "10" );
+        equal( $(el).find("#brRow0 #brBar1").text(), "40" );
+
     });
 });
 

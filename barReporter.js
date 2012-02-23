@@ -51,6 +51,7 @@
                 var width = value / scale * 100;
                 if( width > 100 ) { width = 100; }
                 $(el).css("width", width + "%");
+                $(el).text(value);
             });
 
             //Update label
