@@ -11,7 +11,8 @@
         }
 
         //determine graph scale
-        var scale = $.fn.barReporter.calculate_scale(options);
+        var dataScale = $.fn.barReporter.calculate_scale(options);
+        var scale = options.scale || dataScale
 
         //Remove any rows that no longer exist
         if( $(this).find(".brRow").length >= options.data.length ) {
@@ -40,6 +41,7 @@
                 });
             }
 
+
             //Update bar data
             $(data).each( function(index, value) {
                 var el = $.fn.barReporter.get_or_create_bar( row_el, index );
@@ -52,6 +54,23 @@
             //Update label
             label = $.fn.barReporter.format_label( label, options.numNoWrapChars );
             $(row_el).find(".brLabel").html( label );
+
+            //Render percent value for row
+            if( options.showPct ) {
+
+                //calculate total pct for all row data based on dataScale
+                var totalPct = 0;
+                $(data).each( function(index, value) {
+                    totalPct += value / dataScale * 100;
+                });
+                totalPct = Math.round(totalPct);
+
+                //render value
+                $(row_el).find(".brPct").html( totalPct + "%" );
+            } else {
+                //render nothing
+                $(row_el).find(".brPct").html( false );
+            }
 
         }, this));
     };
@@ -70,7 +89,8 @@
         if( !el.length ) {
             el = $("<div class='brRow' id='brRow" + id + "'>" +
                 "<div class='brLabel'></div>" +
-                "<div class='brBars'></div>");
+                "<div class='brBars'></div>" +
+                "<div class='brPct'></div>");
             $(parent).append( el );
         }
         return el;
@@ -88,10 +108,6 @@
 
     //calculates the scale to present items out of
     $.fn.barReporter.calculate_scale = function(options) {
-        if( options.scale ) {
-            return options.scale
-        }
-
         var scale = 0;
 
         for( var index in options.data ) {
@@ -125,7 +141,8 @@
         "color": "green",
         "type": "multi",
         "scale": undefined,
-        "numNoWrapChars": 20
+        "numNoWrapChars": 20,
+        "showPct": true
     }
 
 })(jQuery);

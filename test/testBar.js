@@ -212,6 +212,35 @@ $(document).ready(function() {
 
     });
 
+    module("Perecent value");
+    test("Percent shown when enabled", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({ "data": [[30, "Label 1"]] });
+        equal( $(el).find("#brRow0 .brPct").text(), "100%" );
+    });
+    test("Show, then hide perecent", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({ "data": [[30, "Label 1"]] });
+        equal( $(el).find("#brRow0 .brPct").text(), "100%" );
+
+        $(el).barReporter({ "data": [[30, "Label 1"]], "showPct": false });
+        equal( $(el).find("#brRow0 .brPct").text(), "" );
+    });
+
+    test("Custom scale does not affect percent", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({ "data": [[30, "Label 1"]], "scale": 100 });
+        equal( $(el).find("#brRow0 .brPct").text(), "100%" );
+    });
+    test("Percent not shown when disabled", function() {
+        var el = $("<div class='bar'></div>");
+
+        $(el).barReporter({ "data": [[30, "Label 1"]], "showPct": false });
+        equal( $(el).find("#brRow0 .brPct").text(), "" );
+    });
 
     test("Styling test", function() {
         var el = $("<div class='bar'></div>");
@@ -221,7 +250,7 @@ $(document).ready(function() {
             [[100,10], "a"],
         ]
 
-        $(el).barReporter({"data": data, "type": "stacked"});
+        $(el).barReporter({"data": data, "type": "stacked", "showPct": true});
         $("body").append(el);
     });
 
