@@ -242,6 +242,37 @@ $(document).ready(function() {
         equal( $(el).find("#brRow0 .brPct").text(), "" );
     });
 
+    test("Benchmark test", function() {
+        var el = $("<div class='bar'></div>");
+        var buckets = [[0, "a"],[0, "b"],[0, "c"]];
+        var count = 0;
+        var maxCount = 300;
+
+        console.profile("Benchmark w/ " + maxCount);
+        var render_fn = function() {
+            var index = Math.round( Math.random() * (buckets.length - 1) );
+            buckets[index][0]++;
+
+            $(el).barReporter({ "data": buckets });
+
+            //add a new bucket
+            /*if( count % 50 == 0 ) {*/
+            /*buckets.push( [0, String.fromCharCode( 97 + buckets.length )] );*/
+            /*}*/
+
+            //loop
+            if( count < maxCount ) {
+                count += 1;
+                setTimeout(render_fn, 0);
+            } else {
+                console.profileEnd();
+            }
+        }
+        render_fn();
+
+        $("body").append(el);
+    });
+
     test("Styling test", function() {
         var el = $("<div class='bar'></div>");
         var data = [
