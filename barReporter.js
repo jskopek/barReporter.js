@@ -6,6 +6,7 @@
             "color": "green",
             "type": "multi",
             "scale": undefined,
+            "numNoWrapChars": 20
         }, options);
 
         //add appropriate type css to barReport
@@ -55,10 +56,14 @@
             });
 
             //Update label
-            $(row_el).find(".brLabel").text( label );
+            label = $.fn.barReporter.format_label( label, options.numNoWrapChars );
+            $(row_el).find(".brLabel").html( label );
 
         }, this));
     };
+    $.fn.barReporter.format_label = function( str, numNoWrapChars ) {
+        return str.substr(0,numNoWrapChars).replace(/\s/g, "&nbsp;") + str.substr( numNoWrapChars );
+    }
 
     //find the bar element or initialize & add to container
     $.fn.barReporter.get_or_create_row = function(parent, id) {
