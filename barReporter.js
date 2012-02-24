@@ -11,9 +11,9 @@
         }
 
         //determine graph scale
-        var dataScale = $.fn.barReporter.calculate_scale(options);
-        var pctScale = $.fn.barReporter.calculate_pct_scale(options);
-        var scale = options.scale || dataScale;
+        var data_scale = $.fn.barReporter.calculate_scale(options);
+        var pct_scale = $.fn.barReporter.calculate_pct_scale(options);
+        var scale = options.scale || data_scale;
 
         //determine if non row-specfic values have been changed since last rendering
         //data must be removed, as modifying it is not indicative of change in other options
@@ -30,11 +30,11 @@
         }
 
         //loop through rows and render them
-        for( var rowIndex in options.data ) {
-            var row_data = options.data[rowIndex];
+        for( var row_index in options.data ) {
+            var row_data = options.data[row_index];
 
             //get or create row
-            var row_el = $.fn.barReporter.get_or_create_row(this, rowIndex);
+            var row_el = $.fn.barReporter.get_or_create_row(this, row_index);
 
             //only redraw rows if data has been modified
             if( !options_modified && !$.fn.barReporter.is_modified( row_el, row_data ) ) {
@@ -46,8 +46,8 @@
 
             //Remove any bars that no longer exist
             if( row_el.find(".brBar").length >= data.length ) {
-                row_el.find(".brBar").each(function(rowIndex) {
-                    if( rowIndex > data.length - 1 ) {
+                row_el.find(".brBar").each(function(row_index) {
+                    if( row_index > data.length - 1 ) {
                         $(this).remove();
                     }
                 });
@@ -55,9 +55,9 @@
 
 
             //Update bar data
-            for( var barIndex in data ) {
-                var value = data[barIndex];
-                var el = $.fn.barReporter.get_or_create_bar( row_el, barIndex );
+            for( var bar_index in data ) {
+                var value = data[bar_index];
+                var el = $.fn.barReporter.get_or_create_bar( row_el, bar_index );
                 var width = value / scale * 100;
                 if( width > 100 ) { width = 100; }
                 $(el).css("width", width + "%");
@@ -71,15 +71,15 @@
             //Render percent value for row
             if( options.show_percent ) {
 
-                //calculate total pct for all row data based on dataScale
-                var totalPct = 0;
-                $(data).each( function(rowIndex, value) {
-                    totalPct += value / pctScale * 100;
+                //calculate total pct for all row data based on data_scale
+                var total_pct = 0;
+                $(data).each( function(row_index, value) {
+                    total_pct += value / pct_scale * 100;
                 });
-                totalPct = Math.round(totalPct);
+                total_pct = Math.round(total_pct);
 
                 //render value
-                $(row_el).find(".brPct").html( totalPct + "%" );
+                $(row_el).find(".brPct").html( total_pct + "%" );
             } else {
                 //render nothing
                 $(row_el).find(".brPct").html( false );
@@ -90,13 +90,13 @@
     //
     //determines if the row's data has changed, requiring a redraw
     $.fn.barReporter.is_modified = function( row_el, row_data ) {
-        var oldData = $(row_el).data("rowData");
-        var newData = JSON.stringify(row_data);
+        var old_data = $(row_el).data("rowData");
+        var new_data = JSON.stringify(row_data);
 
-        if( newData == oldData ) {
+        if( new_data == old_data ) {
             return false;
         } else {
-            $(row_el).data("rowData", newData);
+            $(row_el).data("rowData", new_data);
             return true;
         }
     }
