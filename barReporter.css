@@ -30,14 +30,15 @@ body {
 .brBar {
 	line-height: 2em;
 
-	border-right: 1px solid green;
+	border-right: 1px solid rgba(0,0,0,0.4);
+	border-bottom: 1px solid rgba(0,0,0,0.4);
+	
 	padding-right: 5px;
 	text-align: right;
 	box-sizing: border-box;
 	overflow: hidden;
 
 	color: #fff;
-    background-color: #6FBF4D;
     background-image: -moz-linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 47%);
     background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 47%);
 
@@ -46,7 +47,8 @@ body {
 	float: left;	
 }
 
-/* default colorscheme for stacked bars */
-.brStacked #brBar1 { background-color: #5b9e3e; }
-.brStacked #brBar2 { background-color: #477e30; }
-.brStacked #brBar3 { background-color: #356022; }
+/* default colorscheme for bars */
+#brBar0 { background-color: #6FBF4D; }
+#brBar1 { background-color: #5b9e3e; }
+#brBar2 { background-color: #477e30; }
+#brBar3 { background-color: #356022; }
