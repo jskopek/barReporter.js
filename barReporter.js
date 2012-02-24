@@ -12,6 +12,7 @@
 
         //determine graph scale
         var dataScale = $.fn.barReporter.calculate_scale(options);
+        var pctScale = $.fn.barReporter.calculate_pct_scale(options);
         var scale = options.scale || dataScale;
 
         //determine if non row-specfic values have been changed since last rendering
@@ -73,7 +74,7 @@
                 //calculate total pct for all row data based on dataScale
                 var totalPct = 0;
                 $(data).each( function(rowIndex, value) {
-                    totalPct += value / dataScale * 100;
+                    totalPct += value / pctScale * 100;
                 });
                 totalPct = Math.round(totalPct);
 
@@ -164,6 +165,13 @@
 
         return scale;
     }
+
+    //calculates the percentage scale (identical to stacked scale)
+    $.fn.barReporter.calculate_pct_scale = function(options) {
+        var options = $.extend({}, options, { "type": "stacked"} );
+        return $.fn.barReporter.calculate_scale( options );
+    }
+
     $.fn.barReporter.defaults = {
         "data": [],
         "color": "green",

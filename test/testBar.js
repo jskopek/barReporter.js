@@ -212,7 +212,7 @@ $(document).ready(function() {
 
     });
 
-    module("Perecent value");
+    module("Percent value");
     test("Percent shown when enabled", function() {
         var el = $("<div class='bar'></div>");
 
@@ -240,6 +240,24 @@ $(document).ready(function() {
 
         $(el).barReporter({ "data": [[30, "Label 1"]], "show_percent": false });
         equal( $(el).find("#brRow0 .brPct").text(), "" );
+    });
+    test("Percent calculated correctly with multiple points", function() {
+        var el = $("<div class='bar'></div>");
+        var data = [
+            [[20,40, 80], "Ethical"],
+            [30, "Unethical"],
+            [[100,10], "Morally ambiguous"],
+        ]
+
+        $(el).barReporter({"data": data, "type": "multi", "showPct": true});
+        equal( $(el).find("#brRow0 .brPct").text(), "100%" );
+        equal( $(el).find("#brRow1 .brPct").text(), "21%" );
+        equal( $(el).find("#brRow2 .brPct").text(), "79%" );
+
+        $(el).barReporter({"data": data, "type": "stacked", "showPct": true});
+        equal( $(el).find("#brRow0 .brPct").text(), "100%" );
+        equal( $(el).find("#brRow1 .brPct").text(), "21%" );
+        equal( $(el).find("#brRow2 .brPct").text(), "79%" );
     });
 
     /*test("Benchmark test", function() {*/
@@ -276,12 +294,12 @@ $(document).ready(function() {
     /*test("Styling test", function() {*/
     /*var el = $("<div class='bar'></div>");*/
     /*var data = [*/
-    /*[[20,40, 80], "Label 1 modified"],*/
-    /*[30, "Big label with tons and tons of content that just keeps going on it never stops I am getting so tired of this response"],*/
-    /*[[100,10], "a"],*/
+    /*[[20,40, 80], "Ethical"],*/
+    /*[30, "Unethical"],*/
+    /*[[100,10], "Morally ambiguous"],*/
     /*]*/
 
-    /*$(el).barReporter({"data": data, "type": "stacked", "showPct": true});*/
+    /*$(el).barReporter({"data": data, "type": "multi", "showPct": true});*/
     /*$("body").append(el);*/
     /*});*/
 
