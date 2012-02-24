@@ -24,18 +24,19 @@
         }
 
         //loop through rows and render them
-        $(options.data).each($.proxy(function(index, row_data) {
+        for( var rowIndex in options.data ) {
+            var row_data = options.data[rowIndex];
 
             //get or create row
-            var row_el = $.fn.barReporter.get_or_create_row(this, index);
+            var row_el = $.fn.barReporter.get_or_create_row(this, rowIndex);
 
             var data = $.isArray( row_data[0] ) ? row_data[0] : [ row_data[0] ];
             var label = row_data[1];
 
             //Remove any bars that no longer exist
             if( row_el.find(".brBar").length >= data.length ) {
-                row_el.find(".brBar").each(function(index) {
-                    if( index > data.length - 1 ) {
+                row_el.find(".brBar").each(function(rowIndex) {
+                    if( rowIndex > data.length - 1 ) {
                         $(this).remove();
                     }
                 });
@@ -43,13 +44,14 @@
 
 
             //Update bar data
-            $(data).each( function(index, value) {
-                var el = $.fn.barReporter.get_or_create_bar( row_el, index );
+            for( var barIndex in data ) {
+                var value = data[barIndex];
+                var el = $.fn.barReporter.get_or_create_bar( row_el, barIndex );
                 var width = value / scale * 100;
                 if( width > 100 ) { width = 100; }
                 $(el).css("width", width + "%");
                 $(el).text(value);
-            });
+            }
 
             //Update label
             label = $.fn.barReporter.format_label( label, options.num_no_wrap_chars );
@@ -60,7 +62,7 @@
 
                 //calculate total pct for all row data based on dataScale
                 var totalPct = 0;
-                $(data).each( function(index, value) {
+                $(data).each( function(rowIndex, value) {
                     totalPct += value / dataScale * 100;
                 });
                 totalPct = Math.round(totalPct);
@@ -72,7 +74,7 @@
                 $(row_el).find(".brPct").html( false );
             }
 
-        }, this));
+        }
     };
     $.fn.barReporter.format_label = function( str, num_no_wrap_chars ) {
         //use default num_no_wrap_chars if no value provided

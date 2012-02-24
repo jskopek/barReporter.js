@@ -246,7 +246,7 @@ $(document).ready(function() {
         var el = $("<div class='bar'></div>");
         var buckets = [[0, "a"],[0, "b"],[0, "c"]];
         var count = 0;
-        var maxCount = 300;
+        var maxCount = 1000;
 
         console.profile("Benchmark w/ " + maxCount);
         var render_fn = function() {
