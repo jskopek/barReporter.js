@@ -273,17 +273,17 @@ $(document).ready(function() {
     /*render_fn();*/
     /*});*/
 
-    test("Styling test", function() {
-        var el = $("<div class='bar'></div>");
-        var data = [
-            [[20,40, 80], "Label 1 modified"],
-            [30, "Big label with tons and tons of content that just keeps going on it never stops I am getting so tired of this response"],
-            [[100,10], "a"],
-        ]
+    /*test("Styling test", function() {*/
+    /*var el = $("<div class='bar'></div>");*/
+    /*var data = [*/
+    /*[[20,40, 80], "Label 1 modified"],*/
+    /*[30, "Big label with tons and tons of content that just keeps going on it never stops I am getting so tired of this response"],*/
+    /*[[100,10], "a"],*/
+    /*]*/
 
-        $(el).barReporter({"data": data, "type": "stacked", "showPct": true});
-        $("body").append(el);
-    });
+    /*$(el).barReporter({"data": data, "type": "stacked", "showPct": true});*/
+    /*$("body").append(el);*/
+    /*});*/
 
 });
 
