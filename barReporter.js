@@ -12,7 +12,7 @@
 
         //determine graph scale
         var dataScale = $.fn.barReporter.calculate_scale(options);
-        var scale = (options.scale && (options.scale > dataScale)) ? options.scale : dataScale;
+        var scale = options.scale || dataScale;
 
         //determine if non row-specfic values have been changed since last rendering
         //data must be removed, as modifying it is not indicative of change in other options
