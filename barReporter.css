@@ -1,0 +1,35 @@
+body {
+	font-family: Helvetica;
+	font-size: 12px;
+}
+.bar {
+	border: 1px solid red;
+}
+.brRow {
+	border-bottom: 1px solid yellow;
+	display: table-row;
+}
+.brLabel {
+	padding: 0 .5em;
+}
+.brLabel,
+.brBars {
+	background: yellow;
+	display: table-cell;
+	vertical-align: middle;
+}
+.brBars {
+	width: 100%;
+}
+.brBar {
+	background: green;
+	line-height: 2em;
+
+	border-right: 1px solid red;
+	padding-right: 5px;
+	text-align: right;
+	box-sizing: border-box;
+}
+.brStacked .brBar {
+	float: left;	
+}
