@@ -12,7 +12,12 @@
 
         //determine graph scale
         var dataScale = $.fn.barReporter.calculate_scale(options);
-        var scale = options.scale || dataScale
+        var scale = (options.scale && (options.scale > dataScale)) ? options.scale : dataScale;
+
+        //determine if non row-specfic values have been changed since last rendering
+        //data must be removed, as modifying it is not indicative of change in other options
+        var comp_options = $.extend({}, options, {"scale": scale, "data":false});
+        var options_modified = $.fn.barReporter.is_modified( this, comp_options );
 
         //Remove any rows that no longer exist
         if( $(this).find(".brRow").length >= options.data.length ) {
@@ -30,6 +35,11 @@
             //get or create row
             var row_el = $.fn.barReporter.get_or_create_row(this, rowIndex);
 
+            //only redraw rows if data has been modified
+            if( !options_modified && !$.fn.barReporter.is_modified( row_el, row_data ) ) {
+                continue;
+            }
+            
             var data = $.isArray( row_data[0] ) ? row_data[0] : [ row_data[0] ];
             var label = row_data[1];
 
@@ -76,6 +86,20 @@
 
         }
     };
+    //
+    //determines if the row's data has changed, requiring a redraw
+    $.fn.barReporter.is_modified = function( row_el, row_data ) {
+        var oldData = $(row_el).data("rowData");
+        var newData = JSON.stringify(row_data);
+
+        if( newData == oldData ) {
+            return false;
+        } else {
+            $(row_el).data("rowData", newData);
+            return true;
+        }
+    }
+
     $.fn.barReporter.format_label = function( str, num_no_wrap_chars ) {
         //use default num_no_wrap_chars if no value provided
         if( !num_no_wrap_chars ) {
@@ -87,7 +111,8 @@
 
     //find the bar element or initialize & add to container
     $.fn.barReporter.get_or_create_row = function(parent, id) {
-        var el = $(parent).find("#brRow" + id);
+        var el = $(parent).children("#brRow" + id);
+        
         if( !el.length ) {
             el = $("<div class='brRow' id='brRow" + id + "'>" +
                 "<div class='brLabel'></div>" +
@@ -100,7 +125,8 @@
 
     //find or add a new bar
     $.fn.barReporter.get_or_create_bar = function(parent, index) {
-        var el = $(parent).find(".brBars #brBar" + index);
+        var el = $(parent).find(".brBars > #brBar" + index);
+
         if( !el.length ) {
             el = $("<div class='brBar' id='brBar" + index + "'></div>");
             $(parent).find(".brBars").append( el );
@@ -148,133 +174,3 @@
     }
 
 })(jQuery);
-
-//        Reporting.draw_status_bars({
-//            render_fn: function(id, title, height, color) {
-//                var entry = $(ed.templates.render('reporting_bar', {
-//                    id: id,
-//                    title: title,
-//                    height: height, 
-//                    color: color,
-//                    drawbuttons: report_options["draw_correct_answer_buttons"]
-//                }));
-//            },
-//            update_fn: function(el, id, value, label) {
-//                if( !id ) { return false; }
-//                $(el).find("#" + id.valueOf() + " #bar").css("width", value + "%");
-//                $(el).find("#" + id.valueOf() + " .chart_percent").text(value + "%");
-//                $(el).find("#" + id.valueOf() + " .extra_label").text(label);
-//            },
-//
-//        });
-//
-//
-//
-//
-//
-//
-//draw_status_bars: function(options) {
-//    var options = $.extend({ //        el: "body",
-//        title: "",
-//        title_position: "vertical", //may be vertical or horizontal
-//        data: [],
-//        height: 25,
-//        get_fn: this._get_status_bars,
-//        render_fn: this._draw_status_bar,
-//        update_fn: this._update_status_bar,
-//        inline_bars: false, //defines if multiple bars should be rendered in one line, or in multiple rows
-//        remove_unreferenced_bars: true //if the status bar el contains a status bar that is not defined in 'data', specify if remove
-//    }, options);
-//
-//    //el: element to put the status bars in
-//    //data: [{id: '--', title:'---', value: 0-100, label: '(opn)', color: '(opn)'}, ...]
-//
-//    //cannot use table because when tables are not visible, jqplot does not work
-//    //create a container if it doesn't exist of the status bars
-//    var $status_bar_div_container = $(options.el).find(".status_bar_container");
-//
-//    //if nothing present, initialize
-//    if ($status_bar_div_container.length == 0) {
-//        if( options.title_position == "horizontal" ) {
-//            $status_bar_div_container = $("<table class='status_bar_container'></table>");
-//            if (options.drawbuttons && (options.module_item.get('type') != 'na')) {
-//                $status_bar_div_container.append("<tr><td colspan='3'></td><td>Correct</td></tr>");
-//            }
-//
-//        } else {
-//            $status_bar_div_container = $("<div class='status_bar_container'><div class='title'>" + options.title + "</div><div class='status_bars'></div><div style='clear:both;'></div></div>");
-//        }
-//        $(options.el).prepend($status_bar_div_container);
-//    } 
-//
-//    //check against previous data to see if any changes are required; return immediately if not
-//    var prev_data = $status_bar_div_container.data("status_bars_data");
-//    if( prev_data && (_.isEqual(prev_data, options.data)) ) { return true; }
-//    $status_bar_div_container.data("status_bars_data", options.data);
-//
-//    var bar_ids = _.map(options.data, function(item) { return item.id; });
-//    var bar_el_ids = _.map(options.get_fn($status_bar_div_container), function(el) { return $(el).attr("id"); });
-//
-//    //boolean true/false value, triggered if a bar is added or removed from the chart
-//    //when bars are added or removed, we must resize them
-//    var bars_changed = false;
-//
-//    if( options.remove_unreferenced_bars ) {
-//        //remove any bars that are present in the el, but not in the data
-//        _.each(bar_el_ids, function(bar_id) {
-//            if( _.indexOf(bar_ids, bar_id) == -1 ) {
-//                options.get_fn($status_bar_div_container).filter(function() { return $(this).attr("id") == bar_id; }).remove();
-//                bars_changed = true;
-//            }
-//        });
-//    }
-//
-//
-//    //add any bars that are present in the data, but not in the el
-//    _.each(bar_ids, function(bar_id) {
-//        if( _.indexOf(bar_el_ids, bar_id) == -1 ) {
-//            var bar_data = _.detect(options.data, function(item) { return item.id == bar_id});
-//            if( !bar_data.height ) { bar_data.height = options.height; }
-//            if( !bar_data.color ) { bar_data.color = color; }
-//            $status_bar_div_container.append(options.render_fn(bar_data.id, bar_data.title, bar_data.height, bar_data.color));
-//            bars_changed = true;
-//        }
-//    });
-//
-//    //update bars
-//    for( i in options.data ) {
-//        var bar_data = options.data[i];
-//        options.update_fn($status_bar_div_container, bar_data.id, bar_data.value, bar_data.label);
-//    }
-//
-//    if( bars_changed ) {
-//        var $status_bars = $status_bar_div_container.find(".status_bar");
-//        if( options.inline_bars ) {
-//            $status_bars.css("width", (100 / $status_bars.length) + "%");
-//        } else {
-//            $status_bars.css("width", "100%");
-//        }            
-//    }
-//},
-//    _get_status_bars: function(el) {
-//        return $(el).find(".status_bar");
-//    },
-//    _draw_status_bar: function(id, title, height, color, label) {
-//        //value = 0-100
-//        var html = "<div id='" + id + "' class='status_bar' style='float: left;'>" +
-//            "<div class='chart'>" +
-//            "<span class='chart_percent' style='line-height:" + height + "px'></span>" +
-//            "<div id='bar' style='background-color:" + color + "; width: 0%; height:" + height + "px'></div>" +
-//            "</div>" +
-//            (title ? "<div class='label'>" + title + "</div>" : "") +
-//            "</div>";
-//        return html;
-//    },
-//    _update_status_bar: function(el, id, value, label) {
-//        if( !id ) { return false; }
-//        $(el).find("#" + id.valueOf() + " #bar").css("width", value + "%");
-//        $(el).find("#" + id.valueOf() + " .chart_percent").text(label);
-//    },
-//
-//
-//
