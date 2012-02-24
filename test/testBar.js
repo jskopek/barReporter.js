@@ -10,7 +10,6 @@ $(document).ready(function() {
         $(el).barReporter({ "data": [[30, "Label 1"]]});
         ok( $(el).find(".brRow").length, 1 );
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "100%" );
-        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).text() == "Label 1" }).length );
     });
     test("custom scale", function() {
         var el = $("<div class='bar'></div>");
@@ -35,10 +34,8 @@ $(document).ready(function() {
         ok( $(el).find(".brRow").length, 2 );
 
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "50%" );
-        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).text() == "Label 1" }).length );
 
         equal( $(el).find("#brRow1 #brBar0")[0].style.width, "100%" );
-        ok( $(el).find("#brRow1 .brLabel").filter(function() { return $(this).text() == "Label 2" }).length );
     });
     test("simple update", function() {
         var el = $("<div class='bar'></div>");
@@ -47,7 +44,6 @@ $(document).ready(function() {
         //modify a few components of first bar
         $(el).barReporter({"data": [[10, "Label 1 modified"], [40, "Label 2"]]});
         equal( $(el).find("#brRow0 #brBar0")[0].style.width, "25%" );
-        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).text() == "Label 1 modified" }).length );
 
         //add a third row
         $(el).barReporter({"data": [[5, "Label 1 modified"], [40, "Label 2"], [80, "Label 3"]]});
@@ -124,6 +120,63 @@ $(document).ready(function() {
     });
 
     module("Bar Label");
+    test("Rendering labels for simple, small bars", function() {
+        var el = $("<div class='bar'></div>");
+        var lbl1 = "Label 1", lbl2 = "Label 2";
+        $(el).barReporter({"data": [[20, lbl1], [40, lbl2]]});
+
+        lbl1 = $.fn.barReporter.format_label( lbl1 );
+        lbl2 = $.fn.barReporter.format_label( lbl2 );
+
+        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
+        ok( $(el).find("#brRow1 .brLabel").filter(function() { return $(this).html() == lbl2 }).length );
+    });
+    test("Label formater works as expected", function() {
+
+        equal( $.fn.barReporter.format_label("a", 20), "a" );
+        equal( $.fn.barReporter.format_label("A longer string of text", 20), "A&nbsp;longer&nbsp;string&nbsp;of&nbsp;text" );
+        equal( $.fn.barReporter.format_label("A longer string of text", 10), "A&nbsp;longer&nbsp;string of text" );
+    });
+    test("Rendering labels for long bars of text", function() {
+        var el = $("<div class='bar'></div>");
+        var lbl1 = "A long string of text with a ton of content that is very long and goes on and on and on";
+        $(el).barReporter({"data": [[20, lbl1]]});
+
+        lbl1 = $.fn.barReporter.format_label( lbl1 );
+        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
+    });
+    test("Modifying the number of no-wrap characters", function() {
+        var el = $("<div class='bar'></div>");
+        var lbl1 = "A long string of text with a ton of content that is very long and goes on and on and on";
+        $(el).barReporter({"data": [[20, lbl1]], "numNoWrapChars": 50});
+
+        lbl1 = $.fn.barReporter.format_label( lbl1, 50 );
+        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
+    });
+    test("Rendering labels for multi bar points", function() {
+        var el = $("<div class='bar'></div>");
+
+        var lbl1 = "Label 1 modified";
+        $(el).barReporter({"data": [ [[10,40], lbl1] ]});
+
+
+        lbl1 = $.fn.barReporter.format_label( lbl1 );
+        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
+    });
+    test("Modifying the label for multi bar points", function() {
+        var el = $("<div class='bar'></div>");
+
+        var lbl1 = "Label 1 modified";
+        $(el).barReporter({"data": [ [[10,40], lbl1] ]});
+        lbl1 = "Label 1 - now with 100% more characters!!!";
+        $(el).barReporter({"data": [ [[10,40], lbl1] ]});
+
+
+        lbl1 = $.fn.barReporter.format_label( lbl1 );
+        ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
+    });
+
+    module("Bar Value");
     test("render simple bar", function() {
         var el = $("<div class='bar'></div>");
 

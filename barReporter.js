@@ -1,13 +1,7 @@
 
 (function($) {
     $.fn.barReporter = function(options) {
-        options = $.extend({
-            "data": [],
-            "color": "green",
-            "type": "multi",
-            "scale": undefined,
-            "numNoWrapChars": 20
-        }, options);
+        options = $.extend({}, $.fn.barReporter.defaults, options);
 
         //add appropriate type css to barReport
         if( options["type"] == "multi" ) {
@@ -62,6 +56,11 @@
         }, this));
     };
     $.fn.barReporter.format_label = function( str, numNoWrapChars ) {
+        //use default numNoWrapChars if no value provided
+        if( !numNoWrapChars ) {
+            numNoWrapChars = $.fn.barReporter.defaults.numNoWrapChars;
+        }
+
         return str.substr(0,numNoWrapChars).replace(/\s/g, "&nbsp;") + str.substr( numNoWrapChars );
     }
 
@@ -120,6 +119,13 @@
         }
 
         return scale;
+    }
+    $.fn.barReporter.defaults = {
+        "data": [],
+        "color": "green",
+        "type": "multi",
+        "scale": undefined,
+        "numNoWrapChars": 20
     }
 
 })(jQuery);
