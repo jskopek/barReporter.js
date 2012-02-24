@@ -52,11 +52,11 @@
             });
 
             //Update label
-            label = $.fn.barReporter.format_label( label, options.numNoWrapChars );
+            label = $.fn.barReporter.format_label( label, options.num_no_wrap_chars );
             $(row_el).find(".brLabel").html( label );
 
             //Render percent value for row
-            if( options.showPct ) {
+            if( options.show_percent ) {
 
                 //calculate total pct for all row data based on dataScale
                 var totalPct = 0;
@@ -74,13 +74,13 @@
 
         }, this));
     };
-    $.fn.barReporter.format_label = function( str, numNoWrapChars ) {
-        //use default numNoWrapChars if no value provided
-        if( !numNoWrapChars ) {
-            numNoWrapChars = $.fn.barReporter.defaults.numNoWrapChars;
+    $.fn.barReporter.format_label = function( str, num_no_wrap_chars ) {
+        //use default num_no_wrap_chars if no value provided
+        if( !num_no_wrap_chars ) {
+            num_no_wrap_chars = $.fn.barReporter.defaults.num_no_wrap_chars;
         }
 
-        return str.substr(0,numNoWrapChars).replace(/\s/g, "&nbsp;") + str.substr( numNoWrapChars );
+        return str.substr(0,num_no_wrap_chars).replace(/\s/g, "&nbsp;") + str.substr( num_no_wrap_chars );
     }
 
     //find the bar element or initialize & add to container
@@ -141,8 +141,8 @@
         "color": "green",
         "type": "multi",
         "scale": undefined,
-        "numNoWrapChars": 20,
-        "showPct": true
+        "num_no_wrap_chars": 20,
+        "show_percent": true
     }
 
 })(jQuery);

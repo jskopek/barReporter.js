@@ -148,7 +148,7 @@ $(document).ready(function() {
     test("Modifying the number of no-wrap characters", function() {
         var el = $("<div class='bar'></div>");
         var lbl1 = "A long string of text with a ton of content that is very long and goes on and on and on";
-        $(el).barReporter({"data": [[20, lbl1]], "numNoWrapChars": 50});
+        $(el).barReporter({"data": [[20, lbl1]], "num_no_wrap_chars": 50});
 
         lbl1 = $.fn.barReporter.format_label( lbl1, 50 );
         ok( $(el).find("#brRow0 .brLabel").filter(function() { return $(this).html() == lbl1 }).length );
@@ -225,7 +225,7 @@ $(document).ready(function() {
         $(el).barReporter({ "data": [[30, "Label 1"]] });
         equal( $(el).find("#brRow0 .brPct").text(), "100%" );
 
-        $(el).barReporter({ "data": [[30, "Label 1"]], "showPct": false });
+        $(el).barReporter({ "data": [[30, "Label 1"]], "show_percent": false });
         equal( $(el).find("#brRow0 .brPct").text(), "" );
     });
 
@@ -238,7 +238,7 @@ $(document).ready(function() {
     test("Percent not shown when disabled", function() {
         var el = $("<div class='bar'></div>");
 
-        $(el).barReporter({ "data": [[30, "Label 1"]], "showPct": false });
+        $(el).barReporter({ "data": [[30, "Label 1"]], "show_percent": false });
         equal( $(el).find("#brRow0 .brPct").text(), "" );
     });
 
