@@ -2,6 +2,9 @@
 
 The bar reporter allows us to build fast, scalable bar reports. The library is inspired from [jqBarGraph](http://www.workshop.rs/jqbargraph/), so you may want to give that a look if this isn't exactly what you're looking for.
 
+![](http://cl.ly/EUdj/Screen%20Shot%202012-02-24%20at%201.19.52%20PM.png)
+![](http://cl.ly/ETcd/Screen%20Shot%202012-02-24%20at%201.02.13%20PM.png)
+
 ##Features
 
 * Fast: handles rapid updates with minimal CPU overhead and work
